@@ -1,0 +1,278 @@
+# Sistema Bancário Digital
+
+Projeto acadêmico desenvolvido utilizando React, Node.js, Express e PostgreSQL para a matéria de Banco de dados II, docente professor Pablo, no Instituto Federal de Santa Catarina em Canoinhas - SC, junho de 2026.
+
+## Tecnologias Utilizadas
+
+### Frontend
+
+* React
+* React Router DOM
+* Axios
+* Bootstrap
+
+### Backend
+
+* Node.js
+* Express
+* PostgreSQL
+* JWT
+* Cors
+* Dotenv
+
+### Banco de Dados
+
+* PostgreSQL 14+
+
+---
+
+# Clonando o Projeto
+
+Abra o terminal e execute:
+
+```bash
+git clone URL_DO_REPOSITORIO
+```
+
+Entre na pasta do projeto:
+
+```bash
+cd sistema_bancario
+```
+
+---
+
+# Configuração do Banco de Dados
+
+Restaurar Banco de Dados com DBeaver
+Criar o Banco
+
+Conecte-se ao PostgreSQL pelo DBeaver e execute:
+
+CREATE DATABASE sistema_bancario;
+
+Restaurar um Backup SQL
+Abra o DBeaver.
+Conecte-se ao PostgreSQL.
+Clique com o botão direito no banco banco_digital.
+Selecione:
+SQL Editor → New SQL Script
+Abra o arquivo de backup .sql.
+Cole o conteúdo no editor SQL.
+Execute utilizando:
+Ctrl + Enter
+
+ou clique no botão ▶ Execute Script.
+
+Restaurar Arquivo .backup
+
+Caso o backup seja do tipo .backup/dump do PostgreSQL:
+Nome do arquivo para restaurar no seu banco de dados dump_sistemabancario está na pasta scripts_sql.
+
+Clique com o botão direito no banco:
+sistema_bancario
+Selecione:
+Tools → Restore
+Escolha o arquivo .backup.
+Informe o caminho do utilitário PostgreSQL (pg_restore), caso solicitado.
+Clique em:
+
+Start
+Testar a Conexão
+
+Após a restauração execute:
+
+SELECT NOW();
+
+Resultado esperado:
+
+2026-06-15 10:30:00
+Verificar Tabelas
+SELECT * FROM cliente LIMIT 5;
+SELECT * FROM conta LIMIT 5;
+SELECT * FROM usuario LIMIT 5;
+
+Se os registros forem exibidos, o banco foi restaurado corretamente.
+---
+
+## Executar Backend
+
+```bash
+npm run dev
+```
+
+ou
+
+```bash
+nodemon src/app.js
+```
+
+Resultado esperado:
+
+```text
+Servidor rodando na porta 3000
+```
+
+Teste:
+
+```text
+http://localhost:3000
+```
+
+Retorno:
+
+```json
+{
+  "sistema": "Banco Digital",
+  "status": "online"
+}
+```
+
+---
+
+# Configuração Frontend
+
+Entrar na pasta:
+
+```bash
+cd frontend
+```
+
+Instalar dependências:
+
+```bash
+npm install
+```
+
+Executar:
+
+```bash
+npm run dev
+```
+
+Resultado esperado:
+
+```text
+Local: http://localhost:5173
+```
+
+---
+
+# Login do Sistema
+
+## Administrador
+
+```text
+Usuário: admin
+Senha: 123456
+```
+
+---
+
+## Cliente de Teste
+
+```text
+Login: 11111111111
+Senha: 123456
+```
+
+---
+
+# Funcionalidades
+
+## Cliente
+
+* Login
+* Consulta de saldo
+* Consulta de agência
+* Consulta de conta
+* Extrato
+* PIX
+* Histórico de PIX
+* Logout
+
+---
+
+## Administrador
+
+* Dashboard
+* Cadastro de clientes
+* Cadastro automático de conta
+* Cadastro automático de usuário
+* Auditoria
+* Consulta de clientes
+* Consulta de contas
+* Consulta de transações
+
+---
+
+# Estrutura do Projeto
+
+```text
+sistema_bancario/
+
+├── backend/
+│   ├── src/
+│   │   ├── app.js
+│   │   ├── routes/
+│   │   ├── controllers/
+│   │   ├── database/
+│   │   └── middlewares/
+│   ├── package.json
+│   └── .env
+│
+├── frontend/
+│   ├── src/
+│   │   ├── pages/
+│   │   ├── routes/
+│   │   ├── services/
+│   │   └── components/
+│   └── package.json
+│
+└── scripts_sql/
+```
+
+---
+
+# Comandos Úteis
+
+## Reiniciar Backend
+
+```bash
+Ctrl + C
+npm run dev
+```
+
+## Instalar Dependências
+
+Backend:
+
+```bash
+npm install
+```
+
+Frontend:
+
+```bash
+npm install
+```
+
+## Atualizar Dependências
+
+```bash
+npm update
+```
+
+---
+
+# Desenvolvedores
+
+Projeto desenvolvido para a disciplina de Banco de Dados II
+
+Equipe:
+
+* Gustavo Luiz
+* Integrantes do grupo
+
+```
+```
