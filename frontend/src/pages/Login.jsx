@@ -36,6 +36,8 @@ export default function Login() {
         response.data.id_cliente
       );
 
+    console.log(response.data);
+
       if (response.data.perfil === 'ADMIN') {
 
         navigate('/admin/dashboard');

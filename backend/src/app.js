@@ -662,45 +662,12 @@ app.get('/cliente/:id', async (req, res) => {
 
 app.get('/extrato/:idCliente', async (req, res) => {
 
-  try {
-
-    const result = await pool.query(`
-      SELECT
-        t.id_transacao,
-        t.data_hora,
-        t.tipo_transacao,
-        t.valor,
-        t.descricao,
-        t.conta_origem,
-        t.conta_destino
-      FROM transacao t
-      INNER JOIN conta c
-        ON c.id_conta = t.conta_origem
-        OR c.id_conta = t.conta_destino
-      WHERE c.id_cliente = $1
-      ORDER BY t.data_hora DESC
-    `,
-      [req.params.idCliente]);
-
-    res.json(result.rows);
-
-  } catch (error) {
-
-    res.status(500).json({
-      erro: error.message
-    });
-
-  }
-
-});
-
-app.get('/extrato/:idCliente', async (req, res) => {
+  console.log('ENTROU NA ROTA EXTRATO');
 
   try {
 
     const result = await pool.query(`
-      SELECT
-        *
+      SELECT *
       FROM transacao
       WHERE conta_origem IN (
         SELECT id_conta
@@ -714,11 +681,16 @@ app.get('/extrato/:idCliente', async (req, res) => {
       )
       ORDER BY data_hora DESC
     `,
-      [req.params.idCliente]);
+    [req.params.idCliente]);
+
+    console.log('ID:', req.params.idCliente);
+    console.log('TOTAL:', result.rows.length);
 
     res.json(result.rows);
 
   } catch (error) {
+
+    console.log(error);
 
     res.status(500).json({
       erro: error.message
@@ -727,6 +699,7 @@ app.get('/extrato/:idCliente', async (req, res) => {
   }
 
 });
+
 app.get('/pix/:idConta', async (req, res) => {
 
   try {

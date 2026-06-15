@@ -16,13 +16,13 @@ export default function Extrato() {
 
     try {
 
-      const idCliente =
-        localStorage.getItem('id_cliente');
+      const idConta =
+        localStorage.getItem('id_conta');
 
       const response =
-        await api.get(
-          `/extrato/${idCliente}`
-        );
+        await api.get(`/extrato/${idConta}`);
+
+      console.log('Extrato:', response.data);
 
       setExtrato(response.data);
 
@@ -35,6 +35,7 @@ export default function Extrato() {
   }
 
   return (
+
     <div className="container mt-4">
 
       <div className="d-flex justify-content-between align-items-center mb-4">
@@ -51,51 +52,73 @@ export default function Extrato() {
         </button>
 
       </div>
-
       <table className="table table-striped">
 
         <thead>
+
           <tr>
             <th>Data</th>
             <th>Descrição</th>
             <th>Valor</th>
           </tr>
+
         </thead>
 
         <tbody>
 
-          {extrato.map(item => (
+          {extrato.length === 0 ? (
 
-            <tr key={item.id_transacao}>
-
-              <td>
-                {new Date(
-                  item.data_hora
-                ).toLocaleDateString('pt-BR')}
-              </td>
-
-              <td>
-                {item.descricao}
-              </td>
-
+            <tr>
               <td
-                className={
-                  Number(item.valor) >= 0
-                    ? 'text-success'
-                    : 'text-danger'
-                }
+                colSpan="3"
+                className="text-center"
               >
-                R$ {Number(item.valor).toFixed(2)}
+                Nenhuma movimentação encontrada.
               </td>
-
             </tr>
 
-          ))}
+          ) : (
+
+            extrato.map(item => (
+
+              <tr key={item.id_transacao}>
+
+                <td>
+                  {new Date(item.data_hora)
+                    .toLocaleString('pt-BR')}
+                </td>
+
+                <td>
+                  {item.descricao}
+                </td>
+
+                <td
+                  className={
+                    item.conta_origem ==
+                      localStorage.getItem('id_conta')
+                      ? 'text-danger'
+                      : 'text-success'
+                  }
+                >
+                  {item.conta_origem ==
+                    localStorage.getItem('id_conta')
+                    ? '-'
+                    : '+'}
+                  R$ {Number(item.valor).toFixed(2)}
+                </td>
+
+              </tr>
+
+            ))
+
+          )}
 
         </tbody>
 
       </table>
 
     </div>
+
   );
+
 }
