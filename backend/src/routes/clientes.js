@@ -1,3 +1,6 @@
+const registrarLog =
+  require('../middlewares/auditoriaMongo');
+
 app.post('/clientes', async (req, res) => {
 
   const {
@@ -33,7 +36,17 @@ app.post('/clientes', async (req, res) => {
       ]
     );
 
-    res.status(201).json(result.rows[0]);
+    // LOG NO MONGO
+    await registrarLog(
+      req.usuario.login,
+      req.usuario.perfil,
+      'CLIENTE_CRIADO',
+      req
+    );
+
+    res.status(201).json(
+      result.rows[0]
+    );
 
   } catch (error) {
 

@@ -4,7 +4,12 @@ const express = require('express');
 const cors = require('cors');
 const pool = require('./database');
 const app = express();
+const registrarLog =
+  require('./middlewares/auditoriaMongo');
+const conectarMongo =
+  require('./config/mongodb');
 
+conectarMongo();
 app.use(cors());
 app.use(express.json());
 
@@ -70,6 +75,14 @@ app.post('/login', async (req, res) => {
       }
     );
 
+    // Salva log no Mongo
+    await registrarLog(
+      usuario.login,
+      usuario.perfil,
+      'LOGIN',
+      req
+    );
+
     res.json({
       token,
       perfil: usuario.perfil,
@@ -77,6 +90,8 @@ app.post('/login', async (req, res) => {
     });
 
   } catch (error) {
+
+    console.log(error);
 
     res.status(500).json({
       erro: error.message
@@ -342,6 +357,21 @@ app.post('/pix', async (req, res) => {
     });
 
   }
+  await pool.query(
+    'CALL sp_pix($1,$2,$3)',
+    [
+      conta_origem,
+      contaDestino,
+      valor
+    ]
+  );
+
+  await registrarLog(
+    conta_origem,
+    'CLIENTE',
+    'PIX_REALIZADO',
+    req
+  );
 
 });
 
@@ -415,6 +445,13 @@ app.post('/login', async (req, res) => {
       perfil: usuario.perfil,
       usuario
     });
+
+    await registrarLog(
+      usuario.login,
+      usuario.perfil,
+      'LOGIN',
+      req
+    );
 
   } catch (error) {
 
@@ -681,7 +718,7 @@ app.get('/extrato/:idCliente', async (req, res) => {
       )
       ORDER BY data_hora DESC
     `,
-    [req.params.idCliente]);
+      [req.params.idCliente]);
 
     console.log('ID:', req.params.idCliente);
     console.log('TOTAL:', result.rows.length);
@@ -714,6 +751,29 @@ app.get('/pix/:idConta', async (req, res) => {
       [req.params.idConta]);
 
     res.json(result.rows);
+
+  } catch (error) {
+
+    res.status(500).json({
+      erro: error.message
+    });
+
+  }
+
+});
+
+const Auditoria =
+require('./models/Auditoria');
+
+app.get('/auditoria-mongo', async (req, res) => {
+
+  try {
+
+    const logs = await Auditoria
+      .find()
+      .sort({ dataHora: -1 });
+
+    res.json(logs);
 
   } catch (error) {
 

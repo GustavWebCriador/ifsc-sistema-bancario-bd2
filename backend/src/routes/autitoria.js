@@ -14,3 +14,4 @@ app.get('/auditoria', async (req, res) => {
     });
   }
 });
+

@@ -8,7 +8,6 @@ export default function Login() {
 
   const [cpf, setCpf] = useState('');
   const [senha, setSenha] = useState('');
-
   async function entrar(e) {
 
     e.preventDefault();
@@ -36,7 +35,7 @@ export default function Login() {
         response.data.id_cliente
       );
 
-    console.log(response.data);
+      console.log(response.data);
 
       if (response.data.perfil === 'ADMIN') {
 

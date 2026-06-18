@@ -103,7 +103,7 @@ export default function AdminDashboard() {
           className="btn btn-dark"
           to="/admin/auditoria"
         >
-          Auditoria
+          Auditoria Logs
         </Link>
 
         <Link
