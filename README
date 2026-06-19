@@ -2,11 +2,17 @@
 
 Projeto acadêmico desenvolvido utilizando React, Node.js, Express e PostgreSQL para a matéria de Banco de dados II, docente professor Pablo, no Instituto Federal de Santa Catarina em Canoinhas - SC, junho de 2026.
 
+## Banco de Dados, como restaurar?
+
+Nesse projeto está a pasta banco_sql a qual consta o dump do projeto e um arquivo TXT para executar todas as funções para verificar
+o funcionamento do banco de dados que criamos.
+Caso tenha problemas para restaurar o banco, nesse README deixei um passo a passo para configuração.
+
 ## Tecnologias Utilizadas
 
 ### Frontend
 
-* React
+* React + Vite
 * React Router DOM
 * Axios
 * Bootstrap
@@ -22,16 +28,66 @@ Projeto acadêmico desenvolvido utilizando React, Node.js, Express e PostgreSQL 
 
 ### Banco de Dados
 
-* PostgreSQL 14+
+* PostgreSQL 16+
 
 ---
+
+### Requisitos para Execução do Projeto
+
+* 1. PostgreSQL 16 ou superior
+
+Responsável pelo banco de dados do sistema.
+
+Download:
+https://www.postgresql.org/download/
+
+---
+
+* 2. DBeaver ou pgAdmin (opcional)
+
+Utilizado para visualizar o banco, executar consultas SQL e restaurar backups.
+
+Downloads:
+
+DBeaver:
+https://dbeaver.io/download/
+
+pgAdmin:
+https://www.pgadmin.org/download/
+
+---
+
+* 3. Node.js 20 ou superior
+
+Responsável pela execução do backend.
+
+Download:
+https://nodejs.org/
+
+Verificar instalação:
+
+node -v
+npm -v
+
+--- 
+* 4. Git
+
+Necessário para clonar o repositório.
+
+Download:
+https://git-scm.com/downloads
+
+Verificar instalação:
+
+git --version
+
 
 # Clonando o Projeto
 
 Abra o terminal e execute:
 
 ```bash
-git clone URL_DO_REPOSITORIO
+git clone https://github.com/GustavWebCriador/ifsc-sistema-bancario-bd2.git
 ```
 
 Entre na pasta do projeto:
@@ -39,6 +95,9 @@ Entre na pasta do projeto:
 ```bash
 cd sistema_bancario
 ```
+no terminal para abrir o VScode digite o comando
+
+* code .
 
 ---
 
@@ -67,7 +126,7 @@ ou clique no botão ▶ Execute Script.
 Restaurar Arquivo .backup
 
 Caso o backup seja do tipo .backup/dump do PostgreSQL:
-Nome do arquivo para restaurar no seu banco de dados dump_sistemabancario está na pasta scripts_sql.
+Nome do arquivo para restaurar no seu banco de dados dump_sistemabancario está na pasta banco_sql.
 
 Clique com o botão direito no banco:
 sistema_bancario
@@ -93,9 +152,17 @@ SELECT * FROM conta LIMIT 5;
 SELECT * FROM usuario LIMIT 5;
 
 Se os registros forem exibidos, o banco foi restaurado corretamente.
+
+***
+* IMPORTANTE 
+
+Para verificar o funcionamento das Fuctions do Banco de dados, criei um passo a passo na pasta banco_sql, arquivo TXT, funcionamento_apresentacao, onde consta as funções do banco e como executar para verificação. 
+
 ---
 
 ## Executar Backend
+
+Na pasta do backend
 
 ```bash
 npm run dev
@@ -229,7 +296,7 @@ sistema_bancario/
 │   │   └── components/
 │   └── package.json
 │
-└── scripts_sql/
+└── banco_sql/
 ```
 
 ---
@@ -272,7 +339,7 @@ Projeto desenvolvido para a disciplina de Banco de Dados II
 Equipe:
 
 * Gustavo Luiz
-* Integrantes do grupo
+* Mauricio
+* Manoro
+* Lais 
 
-```
-```

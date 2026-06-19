@@ -1,0 +1,312 @@
+Olá Professor Pablo, para restaura nosso projeto,
+nessa pasta consta o dump do banco para restaurar.
+Utilizamos Postgres 18 com a interface do DBever.
+
+
+------------------------------------------
+- 1.Restaurar Banco de Dados com DBeaver -
+------------------------------------------
+1.1 Conecte-se ao PostgreSQL pelo DBeaver e execute:
+
+Clique com o botão direito em:
+Databases/Banco de dados 
+
+Depois:
+Create New Database
+
+Nome:
+sistema_bancario(aqui é opcional).
+
+Clique em OK.
+
+-----------------------------------------------------
+1.2. Configurar o Cliente Postgres, se necessário. 
+------------------------------------------------------
+
+e a opção Restore não funcionar, configure o caminho do PostgreSQL:
+Database
+→ Driver Manager
+→ PostgreSQL
+→ Local Client
+
+ou
+Window
+→ Preferences
+→ Database
+→ Native Client
+
+Informe a pasta:
+C:\Program Files\PostgreSQL\17\bin
+
+(Ajuste conforme sua versão.)
+Verifique se existem arquivos:
+pg_restore.exe
+pg_dump.exe
+psql.exe
+
+3. Abrir a tela de Restore
+Clique com o botão direito sobre:
+
+sistema_bancario(Ou o nome que informou)
+
+Depois:
+Tools
+→ Restore
+
+------------------------
+1.4. Configurar o Restore
+------------------------
+
+Na tela:
+Input File
+Selecione o arquivo:
+
+dump-sistema_bancario.sql(Ele se encontra na pasta scripts_sql em nosso projeto)
+
+Aqui consta um caminho relativo do arquivo, faço a sugestão de verificar como importou ou que pasta colocou, apos o git clone 
+abaixar o arquivo.
+Sugestão de caminho:
+C:\Users\SEU USUARIO\sistema_bancario\scripts_sql\dum-sistema_bancario.sql
+
+Format
+Escolha:
+Custom
+Se for um arquivo .backup ou PGDMP.
+Role
+Normalmente:
+postgres
+Clean before restore
+Pode marcar:
+☑ Clean before restore
+para remover objetos existentes
+
+------------------------
+1.5 Executar
+------------------------
+
+Clique:
+Start
+
+------------------------
+1.6. Verifique o Resultado 
+------------------------
+Ao final deve aparecer algo parecido com:
+Process finished with exit code 0
+ou
+Restore completed successfully
+
+------------------------------------------------------
+1.7. Executar comando, conferir se deu certo o restaure
+------------------------------------------------------
+Execute:
+
+SELECT table_name
+FROM information_schema.tables
+WHERE table_schema = 'public';
+
+Deve aparecer algo parecido com:
+cliente
+conta
+transacao
+auditoria
+agencia
+convenio
+pix_pessoa
+
+---------------------------------------------
+1.8 Conferir as procedures, se esta tudo ok.
+---------------------------------------------
+
+Execute:
+SELECT routine_name
+FROM information_schema.routines
+WHERE routine_schema = 'public';
+
+Resultado esperado:
+sp_deposito
+sp_pix
+fn_auditoria_transacao
+
+--------------------
+1.9 Conferir trigger
+--------------------
+
+Execute:
+SELECT trigger_name
+FROM information_schema.triggers;
+
+Resultado esperado:
+trg_auditoria_transacao
+
+-------------------------------------
+- 2. Apresentação do Banco de dados -
+-------------------------------------
+Aqui vamos apresentar as funções do banco de dados 
+e os comandos executados para verificar o funcionamento
+e as tabelas, trigger, procedures e CTE'S etc...
+
+---------------------
+2.1 Tabelas criadas
+---------------------
+
+SELECT table_name
+FROM information_schema.tables
+WHERE table_schema = 'public';
+
+Aqui estão as entidades do sistema bancário: cliente, conta, transação, auditoria, PIX, convênio, agência 
+e demais tabelas do projeto
+
+---------------------
+2.2 Mostrar Clientes
+---------------------
+SELECT *
+FROM cliente;
+
+Cada cliente pode possuir uma ou mais contas bancárias
+
+---------------------
+2.3 Mostrar as contas
+---------------------
+
+SELECT
+    id_conta,
+    saldo
+FROM conta;
+
+Estas são as contas cadastradas e seus respectivos saldos.
+
+-----------------------------
+2.4 Demonstrar uma Procedure
+-----------------------------
+
+2.4.1 Antes de Pix:
+
+SELECT
+    id_conta,
+    saldo
+FROM conta
+WHERE id_conta IN (1,2);
+
+2.4.3 Executar o Pix no banco:
+
+CALL sp_pix(
+    1,
+    2,
+    50.00,
+);
+
+2.4.3 depois de Pix:
+
+SELECT
+    id_conta,
+    saldo
+FROM conta
+WHERE id_conta IN (1,2);
+
+A procedure realiza a movimentação financeira aplicando as regras de negócio diretamente no banco.
+
+----------------------------------
+2.4 Mostrar a Trigger de Auditoria
+----------------------------------
+SELECT *
+FROM auditoria
+ORDER BY id_auditoria DESC
+LIMIT 5;
+
+Observe que o saldo foi debitado da conta origem e creditado na conta destino
+
+-----------------------------
+2.5 Mostrar as Views
+-----------------------------
+
+2.5.1 Extrato
+SELECT *
+FROM vw_extrato_conta
+LIMIT 10;
+
+2.5.2 Pix
+
+SELECT *
+FROM vw_pix
+LIMIT 10;
+
+2.5.3 Saldo
+
+SELECT *
+FROM vw_saldo_contas;
+
+As views facilitam a geração de relatórios sem necessidade de consultas complexas.
+
+--------------------
+2.6 Mostrar as Roles
+--------------------
+
+SELECT rolname
+FROM pg_roles
+WHERE rolname IN (
+    'caixa',
+    'gerente',
+    'auditor'
+);
+
+Implementamos controle de acesso baseado em papéis.
+
+---------------------
+2.7 Mostrar os GRANTs
+---------------------
+
+SELECT
+    grantee,
+    table_name,
+    privilege_type
+FROM information_schema.role_table_grants
+WHERE grantee IN (
+    'caixa',
+    'gerente',
+    'auditor'
+)
+ORDER BY grantee;
+
+Cada perfil possui permissões específicas de acordo com sua função.
+
+---------------------------
+2.8 Mostrar EXPLAIN ANALYZE
+---------------------------
+
+EXPLAIN ANALYZE
+SELECT *
+FROM transacao
+WHERE conta_origem = 1;
+
+
+SELECT indexname
+FROM pg_indexes
+WHERE schemaname='public';
+
+Utilizamos análise de execução para avaliar o desempenho das consultas e justificar a criação de índices.
+
+
+---------------
+2.9 Mostrar SQL CTE/WINDOW
+---------------
+
+2.9.1 CTE
+WITH movimentacoes AS (
+    SELECT *
+    FROM transacao
+)
+SELECT *
+FROM movimentacoes;
+
+2.9.2 Window Function
+SELECT
+    conta_origem,
+    valor,
+    SUM(valor) OVER (
+        PARTITION BY conta_origem
+        ORDER BY data_hora
+    ) AS saldo_acumulado
+FROM transacao;
+
+Também implementamos recursos avançados de SQL, como CTEs e funções de janela
+
