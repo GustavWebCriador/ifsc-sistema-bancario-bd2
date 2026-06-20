@@ -61,12 +61,12 @@ Na tela:
 Input File
 Selecione o arquivo:
 
-dump-sistema_bancario.sql(Ele se encontra na pasta scripts_sql em nosso projeto)
+dump-sistema_bancario.sql(Ele se encontra na pasta banco_sql em nosso projeto)
 
 Aqui consta um caminho relativo do arquivo, faço a sugestão de verificar como importou ou que pasta colocou, apos o git clone 
 abaixar o arquivo.
 Sugestão de caminho:
-C:\Users\SEU USUARIO\sistema_bancario\scripts_sql\dum-sistema_bancario.sql
+C:\Users\SEU USUARIO\sistema_bancario\banco_sql\dum-sistema_bancario.sql
 
 Format
 Escolha:
@@ -173,6 +173,9 @@ SELECT
     saldo
 FROM conta;
 
+SELECT id_conta, saldo
+FROM conta;
+
 Estas são as contas cadastradas e seus respectivos saldos.
 
 -----------------------------
@@ -192,7 +195,7 @@ WHERE id_conta IN (1,2);
 CALL sp_pix(
     1,
     2,
-    50.00,
+    50.00
 );
 
 2.4.3 depois de Pix:
@@ -203,7 +206,27 @@ SELECT
 FROM conta
 WHERE id_conta IN (1,2);
 
+2.4.4 Deposito Realizado pelo Agente Caixa ou Gerente:
+
+CALL sp_deposito(1,150.00);
+
+Verificar a transação
+
+SELECT *
+FROM transacao
+ORDER BY id_transacao DESC
+LIMIT 1;
+
+Verificar a Auditoria:
+
+SELECT *
+FROM auditoria
+ORDER BY id_auditoria DESC
+LIMIT 1;
+
 A procedure realiza a movimentação financeira aplicando as regras de negócio diretamente no banco.
+
+
 
 ----------------------------------
 2.4 Mostrar a Trigger de Auditoria
@@ -238,9 +261,11 @@ FROM vw_saldo_contas;
 As views facilitam a geração de relatórios sem necessidade de consultas complexas.
 
 --------------------
-2.6 Mostrar as Roles
+2.6 Mostrar as Roles Segurança
 --------------------
-
+SELECT rolname
+FROM pg_roles;
+ou
 SELECT rolname
 FROM pg_roles
 WHERE rolname IN (
@@ -270,7 +295,7 @@ ORDER BY grantee;
 Cada perfil possui permissões específicas de acordo com sua função.
 
 ---------------------------
-2.8 Mostrar EXPLAIN ANALYZE
+2.8 Mostrar EXPLAIN ANALYZE de performace
 ---------------------------
 
 EXPLAIN ANALYZE
@@ -284,7 +309,9 @@ FROM pg_indexes
 WHERE schemaname='public';
 
 Utilizamos análise de execução para avaliar o desempenho das consultas e justificar a criação de índices.
-
+A procedure recebe a conta e o valor do depósito, consulta o saldo anterior, atualiza o saldo da conta e 
+registra a operação na tabela de transações. Como existe uma trigger de auditoria, 
+toda movimentação também é registrada automaticamente para rastreabilidade.
 
 ---------------
 2.9 Mostrar SQL CTE/WINDOW
@@ -310,3 +337,17 @@ FROM transacao;
 
 Também implementamos recursos avançados de SQL, como CTEs e funções de janela
 
+Esse seria o funcionamento do Banco de Dados do Sistema bancario, fomos além e implamatamos um frontend e um backend 
+em React JS, Node.JS e frameworks, para simular uma tela. Algo bem basico para estimular nosso aprendizado. Consta no arquivo
+README dessa pasta de projeto o passo a passo e os programas necessário para rodar na sua máquina. 
+
+Fica tambéma  disposição o repositorio GIT do trabalho logo abaixo 
+https://github.com/GustavWebCriador/ifsc-sistema-bancario-bd2
+
+Atenciosamento, 
+Seus alunos,
+Gustavo Medeiros,
+Mauricio,
+Manoro,
+Larissa,
+Lais. 
